@@ -1,5 +1,3 @@
-package recursos.aps1;
-
 import javax.swing.JOptionPane;
 
 // INICIO DO PROGRAMA
@@ -10,7 +8,6 @@ public class Main {
 	static PessoaServiceImpl serv ;
 	
 	public static void main(String[] args) {
-		
 		
 		String s = JOptionPane.showInputDialog("Selecione a forma de armazenamento\n1.Lista\n2.Mapa");
 		if(s.equals("1")) {
