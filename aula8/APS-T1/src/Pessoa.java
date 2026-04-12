@@ -1,5 +1,3 @@
-package recursos.aps1;
-
 public class Pessoa {
 
 	protected String no;// nome da pessoa

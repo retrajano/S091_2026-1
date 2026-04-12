@@ -1,5 +1,3 @@
-package recursos.aps1;
-
 import java.util.List;
 
 public interface BancoDados {

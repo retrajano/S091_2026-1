@@ -1,5 +1,3 @@
-package recursos.aps1;
-
 
 // DICA: aqui estamos fazendo muita coisa
 public interface PessoaService {

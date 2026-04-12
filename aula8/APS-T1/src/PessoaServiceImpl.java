@@ -1,5 +1,3 @@
-package recursos.aps1;
-
 /**
  * 
  * Esta classe e responsavel pela camada de negocio.

@@ -1,5 +1,3 @@
-package recursos.aps1;
-
 public class PessoaFisica extends Pessoa {
 
 	private String cpf;
