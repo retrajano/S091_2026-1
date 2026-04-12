@@ -1,0 +1,17 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start Virtual Desktop",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        ".devcontainer/start-desktop.sh"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
