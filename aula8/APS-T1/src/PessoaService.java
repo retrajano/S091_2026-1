@@ -1,14 +1,9 @@
 
-// DICA: aqui estamos fazendo muita coisa
-public interface PessoaService {
+package recursos.aps1;
 
-	public void salva(Pessoa v) throws Exception;
-	
-	public void remover(Integer i) throws Exception;
-	
-	public Pessoa busca(Integer v);
-	
-	// salario somente de pessoa fisica
-	public String calculaSalario();
-	
+
+public interface PessoaService {
+    void salva(Pessoa pessoa) throws Exception;
+    void remover(Integer id) throws Exception;
+    Pessoa busca(Integer id);
 }

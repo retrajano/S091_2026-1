@@ -1,29 +1,29 @@
+package recursos.aps1;
+
 public class Pessoa {
 
-	protected String no;// nome da pessoa
-	protected String end;// endereco
-	protected Integer id;
-	
-	
-	public String getNo() {
-		return no;
-	}
-	public void setNo(String no) {
-		this.no = no;
-	}
-	public String getEnd() {
-		return end;
-	}
-	public void setEnd(String end) {
-		this.end = end;
-	}
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	
-	
-	
+    protected String nome;      // nome da pessoa
+    protected String endereco;  // endereço da pessoa
+    protected Integer id;
+
+    public String getNome() {
+        return nome;
+    }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 }

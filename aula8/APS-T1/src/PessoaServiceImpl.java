@@ -1,90 +1,58 @@
+package recursos.aps1;
+
 /**
- * 
- * Esta classe e responsavel pela camada de negocio.
- * Ela faz a ligacao com a camada de dados.
- * 
- */ 
+ * Classe responsável pela camada de negócio.
+ * Faz a ligação com a camada de dados.
+ */
+public class PessoaServiceImpl implements PessoaService, SalarioService {
 
-// DICA: esta classe esta fazendo muita coisa
-public class PessoaServiceImpl implements PessoaService {
+    private BancoDados bancoDados;
+    private static int contadorID = 0;
 
-	// DICA: aqui podemos usar SOLID: Pois e necessario ter a opcao de salvar numa mapa.
-	// esta fixo o BancoDadosLista. Deve ter opcao de poder salvar pelo mapa, atraves da classe BancoDadosMapa
-	private BancoDadosLista bancoDadosImpl  = new BancoDadosLista();
-	private static int contadorID =0;
-	
-	
-	
-	// DICA: aqui esta fazendo muita coisa.
-	@Override
-	public void salva(Pessoa v) throws Exception {
+    // Inversão de dependência: recebe qualquer implementação de BancoDados
+    public PessoaServiceImpl(BancoDados bancoDados) {
+        this.bancoDados = bancoDados;
+    }
 
-		if(v == null) {
-			throw new IllegalArgumentException("Pessoa esta null");
-		}
-		
-		if(v.getNo() == null ||  v.getNo().equals("")) {
-			throw new IllegalArgumentException("Nome da pessoa esta invalida");
-		}
-		
-		if(v.getEnd() == null ||  v.getEnd().equals("")) {
-			throw new IllegalArgumentException("Endereco da pessoa esta invalida");
-		}
-		
+    @Override
+    public void salva(Pessoa pessoa) throws Exception {
+        PessoaValidator.validar(pessoa); // validação separada
+        pessoa.setId(contadorID++);
+        bancoDados.salvar(pessoa);
+    }
 
-		// DICA: aqui esta fazendo muita coisa, e se for inserido uma pessoa juridica ?? vai dar erro.
-		PessoaFisica pf = (PessoaFisica) v;
-		if(pf.getSalario() == null || pf.getSalario() < 0) {
-			throw new IllegalArgumentException("Salario da pessoa fisca esta invalida");
-		}
-		
-		v.setId(contadorID++);
-		
-		bancoDadosImpl.salvar(v);
+    @Override
+    public void remover(Integer id) throws Exception {
+        bancoDados.remover(id);
+    }
 
-	}
+    @Override
+    public Pessoa busca(Integer id) {
+        return bancoDados.buscar().stream()
+                .filter(p -> p.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
 
-	@Override
-	public void remover(Integer i) throws Exception{
+    @Override
+    public String calculaSalario() {
+        StringBuilder retorno = new StringBuilder();
+        for (Pessoa p : bancoDados.buscar()) {
+            if (p instanceof PessoaFisica) {
+                PessoaFisica pf = (PessoaFisica) p;
+                retorno.append(pf.getNome())
+                       .append(" salário total R$ ")
+                       .append(calcularSalarioComBonus(pf.getSalario()))
+                       .append("\n");
+            }
+        }
+        return retorno.toString();
+    }
 
-		bancoDadosImpl.remover(i);
-
-	}
-
-	@Override
-	public Pessoa busca(Integer v) {
-		Pessoa p = null;
-		p = bancoDadosImpl.buscar(p);
-		return p;
-	}
-	
-	
-	
-	
-	
-
-	// DICA: aqui esta fazendo muita coisa, use SOLID
-	@Override
-	public String calculaSalario() {
-		StringBuilder retorno = new StringBuilder();
-		for(Pessoa p : bancoDadosImpl.buscar()) {
-			if(p instanceof PessoaFisica) {
-				PessoaFisica pf = (PessoaFisica) p;
-				Float totalSalario = 0f;
-				if(pf.getSalario() < 1000) {
-					totalSalario = (float) ((pf.getSalario() * 0.02) + pf.getSalario());
-				}
-				else if(pf.getSalario() < 3000) {
-					totalSalario = (float) ((pf.getSalario() * 0.04) + pf.getSalario());
-				}
-				else {
-					totalSalario = (float) ((pf.getSalario() * 0.07) + pf.getSalario());
-				}
-				retorno.append(pf.getNo()).append(" salario total R$ ").append(totalSalario).append("\n");
-			}
-		}
-		
-		return retorno.toString();
-	}
-
+    // Método auxiliar para cálculo de bônus → responsabilidade separada
+    private Float calcularSalarioComBonus(Float salario) {
+        if (salario < 1000) return salario + (salario * 0.02f);
+        else if (salario < 3000) return salario + (salario * 0.04f);
+        else return salario + (salario * 0.07f);
+    }
 }

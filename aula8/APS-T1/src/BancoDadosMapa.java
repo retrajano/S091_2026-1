@@ -1,30 +1,35 @@
-import java.util.ArrayList;
+package recursos.aps1;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-
-// DICA: essa classe salva pessoa em um mapa. Esta funcionando corretamente.
+// Classe que salva Pessoa em um mapa
 public class BancoDadosMapa implements BancoDados {
 
-	
-	private Map<Integer,Pessoa> m = new HashMap<Integer,Pessoa>();
-	
-	@Override
-	public void salvar(Pessoa p) {
-		m.put(p.getId(), p);
+    private Map<Integer, Pessoa> mapa = new HashMap<>();
 
-	}
+    @Override
+    public void salvar(Pessoa pessoa) {
+        mapa.put(pessoa.getId(), pessoa);
+    }
 
-	@Override
-	public void remover(Integer idPessoa) {
-		m.remove(idPessoa);
+    @Override
+    public void remover(Integer idPessoa) {
+        mapa.remove(idPessoa);
+    }
 
-	}
-	
-	
-	
+    @Override
+    public Pessoa buscar(Pessoa pessoa) {
+        return mapa.get(pessoa.getId());
+    }
 
+    @Override
+    public List<Pessoa> buscar() {
+        return mapa.values().stream().collect(Collectors.toList());
+    }
+}
 	@Override
 	public Pessoa buscar(Pessoa pe) {
 		

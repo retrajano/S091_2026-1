@@ -1,118 +1,91 @@
+package recursos.aps1;
+
 import javax.swing.JOptionPane;
 
-// INICIO DO PROGRAMA
-
-//DICA: aqui podemos usar muito CLEAN CODE.
 public class Main {
 
-	static PessoaServiceImpl serv ;
-	
-	public static void main(String[] args) {
-		
-		String s = JOptionPane.showInputDialog("Selecione a forma de armazenamento\n1.Lista\n2.Mapa");
-		if(s.equals("1")) {
-			// ja esta configurado para salvar em lista
-			serv = new PessoaServiceImpl();
-		}else if(s.equals("2")) {
-			// aqui, deve ser pensando como a classe PessoaServiceImpl, podera salvar no mapa,
-			// atraves da classe BancoDadosMapa
-			// DICA: usar SOLID, principio inversao da dependencia.
-			JOptionPane.showMessageDialog(null, "ATENCAO, IMPLEMENTAR ");
-		}else {
-			JOptionPane.showMessageDialog(null, "opcao invalida para salvamento");
-			System.exit(1);
-		}
-		
-		while(true) {
-			String o = JOptionPane.showInputDialog(menuPrincipa());
-			if(o.equals("1")) {
-				try {
-				cadastroPessoaF();
-				}catch(Exception e) {
-				JOptionPane.showMessageDialog(null, "erro ao salvar pessoa");
-				}
-			}else if(o.equals("2")) {
-				try {
-				cadastroPessoaJu();
-				} catch (Exception e) {
-				JOptionPane.showMessageDialog(null, "erro ao salvar pessoa");
-				}
-			}else if(o.equals("3")) {
-				mostraSal();
-			}else if(o.equals("4")) {
-				try {
-				re();
-				}catch(Exception e) {
-				JOptionPane.showMessageDialog(null, "erro ao remove pessoa");
-				}
-			}else if(o.equals("3")) {
-				System.exit(1);
-			}
-		}
+    static PessoaServiceImpl serv;
 
-	}
-	
-	
-	private static void re() throws  Exception {
-		String nome = JOptionPane.showInputDialog("Qual id da pessoa para remover");
-		serv.remover(Integer.parseInt(nome));
-		
-	}
-	
-	
-	// REMOCAO ANTIGA
-//	private static void re() throws  Exception {
-//		String nome = JOptionPane.showInputDialog("Qual id da pessoa para remover");
-//		serv.remover(Integer.parseInt(nome));
-//		
-//	}
+    public static void main(String[] args) {
+        String escolha = JOptionPane.showInputDialog("Selecione a forma de armazenamento\n1. Lista\n2. Mapa");
 
+        if ("1".equals(escolha)) {
+            serv = new PessoaServiceImpl(new BancoDadosLista());
+        } else if ("2".equals(escolha)) {
+            serv = new PessoaServiceImpl(new BancoDadosMapa());
+        } else {
+            JOptionPane.showMessageDialog(null, "Opção inválida para salvamento");
+            System.exit(1);
+        }
 
-	private static void mostraSal() {
+        while (true) {
+            String opcao = JOptionPane.showInputDialog(menuPrincipal());
+            switch (opcao) {
+                case "1": cadastrarPessoaFisica(); break;
+                case "2": cadastrarPessoaJuridica(); break;
+                case "3": mostrarSalarios(); break;
+                case "4": removerPessoa(); break;
+                case "5": System.exit(0); break;
+                default: JOptionPane.showMessageDialog(null, "Opção inválida");
+            }
+        }
+    }
 
-		JOptionPane.showMessageDialog(null, serv.calculaSalario());
-		
-	}
+    private static void removerPessoa() {
+        String id = JOptionPane.showInputDialog("Qual id da pessoa para remover?");
+        try {
+            serv.remover(Integer.parseInt(id));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao remover pessoa");
+        }
+    }
 
+    private static void mostrarSalarios() {
+        JOptionPane.showMessageDialog(null, serv.calculaSalario());
+    }
 
-	private static void cadastroPessoaJu() throws Exception {
-		String nome = JOptionPane.showInputDialog("Qual nome da empresa");
-		String end = JOptionPane.showInputDialog("Qual endereco da empresa");
-		String cnpj = JOptionPane.showInputDialog("Qual cnpj da empresa");
-		
-		PessoaJuridica pj = new PessoaJuridica();		
-		pj.setEnd(end);
-		pj.setNo(nome);
-		pj.setCnpj(cnpj);
-		serv.salva(pj);
-		
-	}
+    private static void cadastrarPessoaJuridica() {
+        String nome = JOptionPane.showInputDialog("Nome da empresa");
+        String endereco = JOptionPane.showInputDialog("Endereço da empresa");
+        String cnpj = JOptionPane.showInputDialog("CNPJ da empresa");
 
+        PessoaJuridica pj = new PessoaJuridica();
+        pj.setNome(nome);
+        pj.setEndereco(endereco);
+        pj.setCnpj(cnpj);
 
-	private static void cadastroPessoaF() throws Exception {
-		String nome = JOptionPane.showInputDialog("Qual nome da pessoa");
-		String end = JOptionPane.showInputDialog("Qual endereco da pessoa");
-		String cpf = JOptionPane.showInputDialog("Qual cpf da pessoa");
-		String salario = JOptionPane.showInputDialog("Qual salario da pessoa");
-		PessoaFisica pf = new PessoaFisica();
-		pf.setCpf(cpf);
-		pf.setEnd(end);
-		pf.setNo(nome);
-		pf.setSalario(Float.parseFloat(salario));
-		serv.salva(pf);
-		
-	}
+        try {
+            serv.salva(pj);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao salvar empresa");
+        }
+    }
 
+    private static void cadastrarPessoaFisica() {
+        String nome = JOptionPane.showInputDialog("Nome da pessoa");
+        String endereco = JOptionPane.showInputDialog("Endereço da pessoa");
+        String cpf = JOptionPane.showInputDialog("CPF da pessoa");
+        String salario = JOptionPane.showInputDialog("Salário da pessoa");
 
-	public static String menuPrincipa() {
-		StringBuilder m = new StringBuilder();
-		m.append("selecione uma opcao\n");
-		m.append("1. cadastro pessoa fisica\n");
-		m.append("2. cadastro pessoa juridica\n");
-		m.append("3. mostra salario pessoa fisica\n");
-		m.append("4. remover uma opcao\n");
-		m.append("5. sair\n");
-		return m.toString();
-	}
+        PessoaFisica pf = new PessoaFisica();
+        pf.setNome(nome);
+        pf.setEndereco(endereco);
+        pf.setCpf(cpf);
+        pf.setSalario(Float.parseFloat(salario));
 
+        try {
+            serv.salva(pf);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao salvar pessoa");
+        }
+    }
+
+    public static String menuPrincipal() {
+        return "Selecione uma opção\n" +
+               "1. Cadastro pessoa física\n" +
+               "2. Cadastro pessoa jurídica\n" +
+               "3. Mostrar salários\n" +
+               "4. Remover pessoa\n" +
+               "5. Sair\n";
+    }
 }
